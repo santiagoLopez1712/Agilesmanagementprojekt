@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # Laden der Daten aus der CSV-Datei
     df = pd.read_csv("train.csv", delimiter=",")
 
-    # Konvertierung der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
+    # Konvertierung (Umwandeln) der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
     df["Sales"] = df["Sales"].astype(float)
 
     # Eingabe des Datumsbereichs durch den Benutzer
