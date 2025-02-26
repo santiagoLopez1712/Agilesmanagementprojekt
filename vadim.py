@@ -26,6 +26,7 @@ def calculate_sales_stat(df, beginn_zeiraums, ende_zeitraums, stat_type):
         return None
 
     # Wählen eine statistische Operation
+    # Add test string
     if stat_type == "sum":
         result = filtered_df["Sales"].sum()
         operation_name = "Summe"
@@ -39,7 +40,7 @@ def calculate_sales_stat(df, beginn_zeiraums, ende_zeitraums, stat_type):
         result = filtered_df["Sales"].std()
         operation_name = "Standardabweichung"
     else:
-        print("Fehler: Ungültige statistische Operation angegeben")
+        print("Fehler: Ungultige statistische Operation angegeben")
         return None
 
     return operation_name, result
@@ -50,7 +51,7 @@ if __name__ == "__main__":
     # Laden der Daten aus der CSV-Datei
     df = pd.read_csv("train.csv", delimiter=",")
 
-    # Konvertierung der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
+    # Konvertierung (Umwandeln) der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
     df["Sales"] = df["Sales"].astype(float)
 
     # Eingabe des Datumsbereichs durch den Benutzer
