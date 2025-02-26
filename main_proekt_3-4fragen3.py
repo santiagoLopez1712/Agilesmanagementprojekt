@@ -30,6 +30,8 @@ sales_by_category = df_filtered.groupby("Category")["Sales"].sum().reset_index()
 # Ausgabe der Nachberechnungsergebnisse
 print(sales_by_category)
 
+#Test bei Git
+
 
 
 
