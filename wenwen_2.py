@@ -95,7 +95,7 @@ for column in df_train.columns:
 
 # Am Ende: Save the cleaned dataset
 # Define the save path
-save_path = r"D:\4-IntoCode\12_PM\Git_test\Agilesmanagementprojekt\train_cleaned.csv"
+save_path = r"C:\Users\nutzer\Desktop\Agiles und Git\Agilesmanagementprojekt\train_cleaned.csv"
 # Save the cleaned dataset
 df_train.to_csv(save_path, index=False, encoding="utf-8")
 print(f"Cleaned file saved at: {save_path}")
