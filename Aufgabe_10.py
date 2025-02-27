@@ -5,7 +5,7 @@ import plotly.express as px
 #Install:  pip install streamlit
 
 #CSV
-csv_url = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/refs/heads/main/train.csv"
+csv_url = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/refs/heads/main/train_cleaned.csv"
 
 # Cargar datos
 @st.cache_data

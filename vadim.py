@@ -99,7 +99,7 @@ def trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type):
 if __name__ == "__main__":
 
     # Laden der Daten aus der CSV-Datei
-    df = pd.read_csv("train.csv", delimiter=",")
+    df = pd.read_csv("train_cleaned.csv", delimiter=",")
 
     # Konvertierung (Umwandeln) der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
     df["Sales"] = df["Sales"].astype(float)
