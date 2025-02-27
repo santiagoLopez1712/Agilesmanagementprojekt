@@ -1,105 +1,65 @@
 import pandas as pd
-import urllib.request
-url_2_csv = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/refs/heads/wenwen/train_cleaned.csv"
-file_2_csv = "train_cleaned.csv"
-urllib.request.urlretrieve(url_2_csv, file_2_csv)
-df_train = pd.read_csv(file_2_csv)   # train.csv neue Version importieren und lesen
-
-print(df_train.head(7))   
-## Result: zeig die erste 7 Zeile der neue saubere Dataset, test gut
-
-# Aufgabe 9: Erstellung interaktiver Diagramme (Balken-, Linien- und Kreisdiagramme)
 import matplotlib.pyplot as plt
 
-# Convert 'Order Date' to datetime format
-df_train['Order Date'] = pd.to_datetime(df_train['Order Date'], format="%d/%m/%Y")
 
-## Balkendiagramme: Plot Bar Chart with Different Colors for Each Year
-# Extract Year & Month-Year
-df_train['Year'] = df_train['Order Date'].dt.year
-df_train['Month-Year'] = df_train['Order Date'].dt.strftime('%m/%Y')
-
-# Aggregate Sales by Month-Year
-sales_by_month = df_train.groupby(['Year', 'Month-Year'])['Sales'].sum().reset_index()
-
-# Define colors for different years
-year_colors = {2015: "#FFA500", 2016: "#00008B", 2017: "#90EE90", 2018: "#006400"}
-
-# Plot Bar Chart
-plt.figure(figsize=(12, 6))
-for year in sales_by_month['Year'].unique():
-    subset = sales_by_month[sales_by_month['Year'] == year]
-    plt.bar(subset['Month-Year'], subset['Sales'], color=year_colors[year], label=str(year))
-
-# Rotate X-axis labels
-plt.xticks(rotation=90)
-
-# Labels & Title
-plt.xlabel("Month-Year")
-plt.ylabel("Total Sales")
-plt.title("Total Sales by Month-Year (Colored by Year)")
-plt.legend(title="Year")
-
-# Show Plot
-plt.show()
+def daten_laden(dateiname):
+    """Lädt die CSV-Datei in ein DataFrame."""
+    return pd.read_csv(dateiname)
 
 
-## Liniendiagramme: Plot Line Chart with Different Colors for Each Year
-
-# Ensure 'Order Date' is in datetime format
-df_train['Order Date'] = pd.to_datetime(df_train['Order Date'], format='%d/%m/%Y')
-
-# Extract Year and Year-Month
-df_train['Year'] = df_train['Order Date'].dt.year
-df_train['Year-Month'] = df_train['Order Date'].dt.to_period('M')
-
-# Aggregate Sales by Year-Month
-sales_by_month = df_train.groupby(['Year', 'Year-Month'])['Sales'].sum().reset_index()
-
-# Convert 'Year-Month' to string for plotting
-sales_by_month['Year-Month'] = sales_by_month['Year-Month'].astype(str)
-
-# Define Colors for Each Year
-year_colors = {2015: 'orange', 2016: 'darkblue', 2017: 'lightgreen', 2018: 'darkgreen'}
-
-# Plot Line Chart with Different Colors for Each Year
-plt.figure(figsize=(12, 6))
-
-for year, color in year_colors.items():
-    year_data = sales_by_month[sales_by_month['Year'] == year]
-    plt.plot(year_data['Year-Month'], year_data['Sales'], marker='o', linestyle='-', color=color, label=str(year))
-
-# Formatting
-plt.xlabel("Month-Year")
-plt.ylabel("Total Sales")
-plt.title("Monthly Sales Trend by Year")
-plt.xticks(rotation=90)  # Rotate labels for better readability
-plt.legend(title="Year")
-plt.grid(True)
-
-# Show Plot
-plt.show()
+def daten_vorbereiten(df):
+    """Bereitet die Daten für die Visualisierung vor."""
+    df["Order Date"] = pd.to_datetime(df["Order Date"], format="%d/%m/%Y")
+    df["Jahr"] = df["Order Date"].dt.year
+    df["Jahr-Monat"] = df["Order Date"].dt.to_period("M").astype(str)
+    return df
 
 
-## Kreisdiagramme (Pie Chart)
-# Extract the year
-df_train['Year'] = df_train['Order Date'].dt.year
+def balkendiagramm_erstellen(df):
+    """Erstellt ein Balkendiagramm der monatlichen Umsätze pro Jahr."""
+    umsatz_pro_monat = df.groupby(["Jahr", "Jahr-Monat"])["Sales"].sum().reset_index()
+    jahr_farben = {2015: "#FFA500", 2016: "#00008B", 2017: "#90EE90", 2018: "#006400"}
 
-# Aggregate sales by Year
-sales_by_year = df_train.groupby('Year')['Sales'].sum()
+    plt.figure(figsize=(12, 6))
+    for jahr in umsatz_pro_monat["Jahr"].unique():
+        teilmenge = umsatz_pro_monat[umsatz_pro_monat["Jahr"] == jahr]
+        plt.bar(teilmenge["Jahr-Monat"], teilmenge["Sales"], color=jahr_farben[jahr], label=str(jahr))
 
-# Create the pie chart
-plt.figure(figsize=(8, 6))
-plt.pie(
-    sales_by_year, 
-    labels=sales_by_year.index, 
-    autopct='%1.1f%%', 
-    startangle=140, 
-    colors=plt.cm.Paired.colors
-)
+    plt.xticks(rotation=90)
+    plt.xlabel("Monat-Jahr")
+    plt.ylabel("Gesamtumsatz")
+    plt.title("Gesamtumsatz pro Monat-Jahr")
+    plt.legend(title="Jahr")
+    plt.show()
 
-# Add title
-plt.title('Total Sales Distribution by Year')
 
-# Show the plot
-plt.show()
+def liniengrafik_erstellen(df):
+    """Erstellt eine Liniendiagramm für den Umsatztrend pro Jahr."""
+    umsatz_pro_monat = df.groupby(["Jahr", "Jahr-Monat"])["Sales"].sum().reset_index()
+    jahr_farben = {2015: "orange", 2016: "darkblue", 2017: "lightgreen", 2018: "darkgreen"}
+
+    plt.figure(figsize=(12, 6))
+    for jahr, farbe in jahr_farben.items():
+        jahr_daten = umsatz_pro_monat[umsatz_pro_monat["Jahr"] == jahr]
+        plt.plot(jahr_daten["Jahr-Monat"], jahr_daten["Sales"], marker="o", linestyle="-", color=farbe, label=str(jahr))
+
+    plt.xlabel("Monat-Jahr")
+    plt.ylabel("Gesamtumsatz")
+    plt.title("Monatlicher Umsatztrend")
+    plt.xticks(rotation=90)
+    plt.legend(title="Jahr")
+    plt.grid(True)
+    plt.show()
+
+
+def main():
+    dateiname = "train_cleaned.csv"
+    df = daten_laden(dateiname)
+    df = daten_vorbereiten(df)
+
+    balkendiagramm_erstellen(df)
+    liniengrafik_erstellen(df)
+
+
+if __name__ == "__main__":
+    main()
