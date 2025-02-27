@@ -28,7 +28,6 @@ def calculate_sales_stat(df, beginn_zeiraums, ende_zeitraums, stat_type):
         return None
 
     # Wählen eine statistische Operation
-    # Add test string
     if stat_type == "sum":
         result = filtered_df["Sales"].sum()
         operation_name = "Summe"
@@ -42,15 +41,15 @@ def calculate_sales_stat(df, beginn_zeiraums, ende_zeitraums, stat_type):
         result = filtered_df["Sales"].std()
         operation_name = "Standardabweichung"
     else:
-        print("Fehler: Ungultige statistische Operation angegeben")
+        print("Fehler: Ungültige statistische Operation angegeben")
         return None
 
     return operation_name, result
 
 def trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type):
     """
-    die Funktion erstellt Diagramme des Umsatzvolumens nach Monat und Quartal
-    innerhalb eines bestimmten Zeitraums, um den Umsatztrend zu messen
+    Die Funktion erstellt Diagramme des Umsatzvolumens nach Monat und Quartal
+    innerhalb eines bestimmten Zeitraums, um den Umsatztrend zu messen.
     """
     
     # Daten in das richtige Format bringen
@@ -60,22 +59,22 @@ def trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type):
     beginn_zr = pd.to_datetime(beginn_zr, format="%d/%m/%Y")
     ende_zr = pd.to_datetime(ende_zr, format="%d/%m/%Y")
 
-    df["Order Date"] = pd.to_datetime(df["Order Date"], format="%d/%m/%Y", errors="coerce") # wenn falsche Daten vorkommen, ersetzen Pandas sie durch NaT (Not a Time), um Fehler zu vermeiden.
+    df["Order Date"] = pd.to_datetime(df["Order Date"], format="%d/%m/%Y", errors="coerce")
 
     # Datenfilterung nach Datumsbereich
     filtered_df = df[(df["Order Date"] >= beginn_zr) & (df["Order Date"] <= ende_zr)]
 
     # Gruppierung nach Monaten
-    monthly_sales = filtered_df.resample("ME", on="Order Date")["Sales"].sum()
+    monthly_sales = filtered_df.resample("M", on="Order Date")["Sales"].sum()
 
     # Gruppierung nach Quartalen
-    quarterly_sales = filtered_df.resample("QE", on="Order Date")["Sales"].sum()
+    quarterly_sales = filtered_df.resample("Q", on="Order Date")["Sales"].sum()
 
     # Datenvisualisierung
     plt.figure(figsize=(12, 5))
 
     # 1. Diagramm der monatlichen Verkäufe
-    plt.subplot(1, 2, 1)  # 1 ряд, 2 столбца, 1-й график
+    plt.subplot(1, 2, 1)  # 1 Reihe, 2 Spalten, 1. Diagramm
     plt.plot(monthly_sales.index, monthly_sales.values, marker="o", linestyle="-", color="b")
     plt.xlabel("Datum")
     plt.ylabel("Verkaufsvolumen")
@@ -83,8 +82,8 @@ def trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type):
     plt.xticks(rotation=45)
 
     # 2. Diagramm der quartalsweisen Verkäufe
-    plt.subplot(1, 2, 2)  #  1 Zeile, 2 Spalten, 2. Diagramm
-    plt.bar(quarterly_sales.index.strftime("%Y-Q%q"), quarterly_sales.values, color="g")
+    plt.subplot(1, 2, 2)  # 1 Reihe, 2 Spalten, 2. Diagramm
+    plt.bar(quarterly_sales.index.to_period("Q").astype(str), quarterly_sales.values, color="g")
     plt.xlabel("Quartal")
     plt.ylabel("Verkaufsvolumen")
     plt.title("Quartalsweise Verkäufe")
@@ -98,10 +97,11 @@ def trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type):
 # Haupteinheit des Programms
 if __name__ == "__main__":
 
-    # Laden der Daten aus der CSV-Datei
-    df = pd.read_csv("train_cleaned.csv", delimiter=",")
+    # Cargar datos desde una URL
+    url = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/refs/heads/wenwen/train_cleaned.csv" # Sustituye con la URL correcta
+    df = pd.read_csv(url, delimiter=",")  # Usa URL para cargar el archivo
 
-    # Konvertierung (Umwandeln) der Spalte „Sales“ in Float, falls sie kein numerisches Format hat
+    # Konvertierung der "Sales"-Spalte in float, falls sie kein numerisches Format hat
     df["Sales"] = df["Sales"].astype(float)
 
     # Eingabe des Datumsbereichs durch den Benutzer
@@ -120,20 +120,20 @@ if __name__ == "__main__":
 
     # Zuordnung der Benutzereingabe zur Funktion
     stat_types = {
-    "1": "sum",
-    "2": "mean",
-    "3": "median",
-    "4": "std",
-    "5": "trends_Monat-Quartal_Verkaufszahlen"
-}
+        "1": "sum",
+        "2": "mean",
+        "3": "median",
+        "4": "std",
+        "5": "trends_Monat-Quartal_Verkaufszahlen"
+    }
 
-stat_type = stat_types.get(stat_choice)
+    stat_type = stat_types.get(stat_choice)
 
-if stat_type == "trends_Monat-Quartal_Verkaufszahlen":
-    trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type)
-else:
-    operation_name, result = calculate_sales_stat(df, beginn_zr, ende_zr, stat_type)
-    if result is not None:
-        print(f"\n {operation_name} zwischen {beginn_zr} und {ende_zr}: {result:.2f}")
+    if stat_type == "trends_Monat-Quartal_Verkaufszahlen":
+        trends_monthly_quarterly_sales(df, beginn_zr, ende_zr, stat_type)
     else:
-        print("Fehler: Ungültige Eingabe. Bitte versuchen Sie es erneut.")
+        operation_name, result = calculate_sales_stat(df, beginn_zr, ende_zr, stat_type)
+        if result is not None:
+            print(f"\n {operation_name} zwischen {beginn_zr} und {ende_zr}: {result:.2f}")
+        else:
+            print("Fehler: Ungültige Eingabe. Bitte versuchen Sie es erneut.")
