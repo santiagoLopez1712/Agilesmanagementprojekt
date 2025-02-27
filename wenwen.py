@@ -3,7 +3,7 @@ import urllib.request
 
 # 1. Die Anwendung muss Verkaufsdaten aus einer CSV-Datei importieren.
 # Use the correct raw GitHub URL for the CSV file
-url_csv = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/main/train.csv"
+url_csv = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/main/train_cleaned.csv"
 filename_csv = "train.csv"
 
 # Download the CSV file

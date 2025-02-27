@@ -4,7 +4,7 @@
 
 import pandas as pd
 import urllib.request
-url_csv = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/main/train.csv"
+url_csv = "https://raw.githubusercontent.com/santiagoLopez1712/Agilesmanagementprojekt/main/train_cleaned.csv"
 filename_csv = "train.csv"
 urllib.request.urlretrieve(url_csv, filename_csv)
 df_train = pd.read_csv(filename_csv)
