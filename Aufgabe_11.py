@@ -127,6 +127,3 @@ while True:
         print("\n Keine Daten für den ausgewählten Zeitraum gefunden.")
 
 #----------------------------------------------------------------------
-
-# 12. Möglichkeit, Analyseergebnisse als PDF- oder CSV-Bericht zu exportieren.
-# 12. posibilidad de exportar los resultados de los análisis en formato PDF o CSV.
